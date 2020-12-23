@@ -7,6 +7,7 @@ var colors = {
   red: "#ff613d",
   pink: "#ff4bda",
   purple: "#af51f5",
+  toolbar: "#000000",
 }
 
 var icons = {
@@ -22,6 +23,7 @@ var icons = {
   tree: "resource://usercontext-content/tree.svg",
   chill: "resource://usercontext-content/chill.svg",
   circle: "resource://usercontext-content/circle.svg",
+  fence: "resource://usercontext-content/fence.svg",
 }
 
 var mode = 'open';
