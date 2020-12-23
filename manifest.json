@@ -1,6 +1,6 @@
 {
   "manifest_version": 2,
-  "name": "New Tab Page Container",
+  "name": "New Tab Page Container light",
   "version": "1.11",
 
   "description": "Show contextual identities on new tab page",
@@ -60,7 +60,7 @@
   "browser_specific_settings": {
     "gecko": {
       "strict_min_version": "64.0",
-      "id": "new_tab_page_container@lighted"
+      "id": "new_tab_page_container_fixed_light@lighted"
     }
   },
 

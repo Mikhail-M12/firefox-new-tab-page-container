@@ -10,173 +10,12 @@ var colors = {
   toolbar: "#000000",
 }
 
-var icons = {
-  fingerprint: "resource://usercontext-content/fingerprint.svg",
-  briefcase: "resource://usercontext-content/briefcase.svg",
-  dollar: "resource://usercontext-content/dollar.svg",
-  cart: "resource://usercontext-content/cart.svg",
-  vacation: "resource://usercontext-content/vacation.svg",
-  gift: "resource://usercontext-content/gift.svg",
-  food: "resource://usercontext-content/food.svg",
-  fruit: "resource://usercontext-content/fruit.svg",
-  pet: "resource://usercontext-content/pet.svg",
-  tree: "resource://usercontext-content/tree.svg",
-  chill: "resource://usercontext-content/chill.svg",
-  circle: "resource://usercontext-content/circle.svg",
-  fence: "resource://usercontext-content/fence.svg",
-}
-
-var mode = 'open';
-
-function isOpenMode() {
-  return isMode('openMode');
-}
-
-function isEditMode() {
-  return isMode('editMode');
-}
-
-function isMode(mode) {
-  return $('#mode .btn.active input').attr('id') === mode;
-}
-
-function initModal() {
-  const $colors = $('#containerColors');
-  const $btnColorTemplate = $('<label class="btn btn-sm" />');
-  const $btnColorInputTemplate = $('<input type="radio" name="containerColor" autocomplete="off" />');
-  $btnColorTemplate.append($btnColorInputTemplate);
-  for (const color in colors) {
-    const $btnColor = $btnColorTemplate.clone();
-    const $btnColorInput = $btnColor.find('input');
-    const $btnColorSpan = $('<span>');
-    $btnColor.css('background-color', colors[color]);
-    $btnColor.attr('data-color', color);
-    $btnColorSpan.html(' '+ color.charAt(0).toUpperCase() + color.slice(1));
-    $btnColor.append($btnColorInput);
-    $btnColor.append($btnColorSpan);
-    $colors.append($btnColor);
-  }
-
-  const $icons = $('#containerIcons');
-  const $btnIconTemplate = $('<label class="btn btn-sm" />');
-  const $btnIconInputTemplate = $('<input type="radio" name="containerIcon" autocomplete="off" />');
-  $btnIconTemplate.append($btnIconInputTemplate);
-  for (const icon in icons) {
-    const $btnIcon = $btnIconTemplate.clone();
-    const $btnIconInput = $btnIcon.find('input');
-    const $btnIconImg = $('<img>');
-    $btnIcon.attr('data-icon', icon);
-    $btnIconImg.attr('src', icons[icon]);
-    $btnIcon.append($btnIconInput);
-    $btnIcon.append($btnIconImg);
-    $icons.append($btnIcon);
-  }
-}
-
-function createIdentityModal() {
-  identityModal('Create new identity', null);
-
-  $('#containerModal').modal('show');
-}
-
-function identityModal(title, identity) {
-  $('#containerModalTitle').html(title);
-  $('#containerIdentity').val(identity ? identity.cookie : '');
-  $('#containerName').val(identity ? identity.name : 'New identity');
-  $('#containerColors .btn').removeClass('active');
-  $('#containerIcons .btn').removeClass('active');
-  $('#deleteContainer').prop('disabled', true);
-  if (identity) {
-    $('#containerColors').find('[data-color="'+identity.color+'"]').addClass('active');
-    $('#containerIcons').find('[data-icon="'+identity.icon+'"]').addClass('active');
-    $('#deleteContainer').prop('disabled', false);
-  } else {
-    $('#containerColors').find('[data-color="blue"]').addClass('active');
-    $('#containerIcons').find('[data-icon="circle"]').addClass('active');
-  }
-}
-
-function editIdentityModal(event) {
-  const $tile = $(event.relatedTarget);
-  if ($tile.data('identity')) {
-    identity = {
-      cookie: $tile.data('identity'),
-      name: $tile.data('name'),
-      color: $tile.data('color'),
-      icon: $tile.data('icon'),
-    }
-    identityModal('Edit identity', identity);
-  }
-}
-
-function submitContainerFromModal(event) {
-  const identity = $('#containerIdentity').val();
-  let name = $('#containerName').val();
-  name = name ? name : 'New identity';
-  let color = $('#containerColors .active').data('color');
-  color = color ? color : colors.blue;
-  let icon = $('#containerIcons .active').data('icon');
-  icon = icon ? icon : icon.circle;
-
-  if (identity) {
-    browser.contextualIdentities.update(identity, {
-      name: name,
-      color: color,
-      icon: icon,
-    });
-
-    const $tile = $('[data-identity="'+identity+'"]');
-    $tile.data('name', name);
-    $tile.data('color', color);
-    $tile.data('icon', icon);
-    $tile.find('.title').html(name);
-    $tile.css('background-color', colors[color]);
-    $tile.find('.icon img').attr('src', icons[icon]);
-  } else {
-    data = {};
-    if (name) {
-      data.name = name;
-      data.color = color;
-      data.icon = icon;
-    }
-    browser.contextualIdentities
-      .create(data)
-      .then((identity) => {
-        let tile = createTile(identity);
-        divTiles.appendChild(tile);
-      });
-  }
-  $('#containerModal').modal('hide');
-  event.preventDefault();
-}
-
-function openDeleteIdentityFromModal() {
-}
-
-function deleteIdentityFromModal() {
-  const identity = $('#containerIdentity').val();
-
-  $('#deleteContainerIdentity').val(identity);
-  $('#containerModal').one('hidden.bs.modal', function() {
-    $('#deleteContainerModal').modal('show');
-  });
-  $('#containerModal').modal('hide');
-}
-
-function confirmDeleteIdentity() {
-  const identity = $('#containerIdentity').val();
-  browser.contextualIdentities.remove(identity).then(() => {
-    $('#deleteContainerModal').modal('hide');
-    $('.tile[data-identity="'+identity+'"]').remove();
-  });
-}
-
 function eventHandler(event) {
   let target = event.target;
   if (target.className !== "tile") {
     target = target.closest('.tile');
   }
-  if (isOpenMode()) {
+  if (true) {
     browser.tabs.getCurrent().then((tabInfo) => {
       browser.tabs.create({
         cookieStoreId: target.dataset.identity, index: (tabInfo.index+1)
@@ -224,7 +63,7 @@ function createTile(identity) {
   content.appendChild(title);
   tile.appendChild(content);
 
-  tile.style = `background-color: ${colors[identity.color]}`;
+  tile.style = `background-color: `+ colors[identity.color];
 
   attachAction(tile, identity);
 
@@ -289,15 +128,3 @@ search.addEventListener('keyup', function(event) {
 });
 
 document.getElementById('searchBtn', performSearch);
-
-$(function() {
-  initModal();
-  $('#containerModal').on('show.bs.modal', editIdentityModal);
-  $('#containerModal form').on('submit', submitContainerFromModal);
-  $('#saveContainer').on('click', function() {
-    $('#containerModal form').submit();
-  });
-  $('#createIdentity').on('click', createIdentityModal);
-  $('#deleteContainer').on('click', deleteIdentityFromModal);
-  $('#confirmIdentityDelete').on('click', confirmDeleteIdentity);
-});
