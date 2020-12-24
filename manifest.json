@@ -14,7 +14,7 @@
   },
 
   "browser_action": {
-    "default_title": "New Tab Page Container",
+    "default_title": "New Tab Page Container light",
     "default_icon": "/icons/new-tab.svg",
     "theme_icons": [
       {
@@ -60,7 +60,7 @@
   "browser_specific_settings": {
     "gecko": {
       "strict_min_version": "64.0",
-      "id": "new_tab_page_container_fixed_light@lighted"
+      "id": "new_tab_page_container_light@lighted"
     }
   },
 
