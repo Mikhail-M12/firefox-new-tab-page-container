@@ -87,6 +87,14 @@ if (browser.contextualIdentities === undefined) {
       let tile = createTile(identity);
       divTiles.appendChild(tile);
     }
+    let defidentity = identities[0];
+    defidentity.cookieStoreId = "";
+    defidentity.name="No container";
+    defidentity.icon="";
+    defidentity.iconUrl="";
+    let deftile = createTile(defidentity);
+    deftile.style = `background-color: grey`;
+    divTiles.appendChild(deftile);
 
     window.addEventListener('resize', updateWidth);
     updateWidth();
